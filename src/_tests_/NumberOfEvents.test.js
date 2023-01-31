@@ -5,7 +5,7 @@ import NumberOfEvents from "../components/NumberOfEvents/NumberOfEvents";
 describe("<NumberOfEvents/> component", () => {
   let NumberOfEventsWrapper;
   beforeAll(() => {
-    NumberOfEventsWrapper = shallow(<NumberOfEvents />);
+    NumberOfEventsWrapper = shallow(<NumberOfEvents updateEvents={() => {}} />);
   });
   test("render event number block", () => {
     expect(NumberOfEventsWrapper.find(".events-number")).toHaveLength(1);

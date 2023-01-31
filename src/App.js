@@ -10,16 +10,37 @@ class App extends Component {
   state = {
     events: [],
     locations: [],
+    userLocation: "all",
+    eventNumber: 32,
   };
 
-  updateEvents = (location) => {
-    getEvents().then((events) => {
-      const locationEvents =
-        location === "all"
-          ? events
-          : events.filter((event) => event.location === location);
-      this.setState({ events: locationEvents });
-    });
+  updateEvents = (location, eventCount) => {
+    const { eventNumber, userLocation } = this.state;
+    if (location) {
+      getEvents().then((events) => {
+        const locationEvents =
+          location === "all"
+            ? events
+            : events.filter((event) => event.location === location);
+        const eventsDisplay = locationEvents.slice(0, eventNumber);
+        this.setState({
+          events: eventsDisplay,
+          userLocation: location,
+        });
+      });
+    } else {
+      getEvents().then((events) => {
+        const locationEvents =
+          userLocation === "all"
+            ? events
+            : events.filter((event) => event.location === userLocation);
+        const eventsDisplay = locationEvents.slice(0, eventCount);
+        this.setState({
+          events: eventsDisplay,
+          eventNumber: eventCount,
+        });
+      });
+    }
   };
 
   componentDidMount() {
@@ -43,7 +64,10 @@ class App extends Component {
           updateEvents={this.updateEvents}
         />
         <EventList events={this.state.events} />
-        <NumberOfEvents />
+        <NumberOfEvents
+          eventNumber={this.state.eventNumber}
+          updateEvents={this.updateEvents}
+        />
       </div>
     );
   }

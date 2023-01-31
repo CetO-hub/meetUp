@@ -40,6 +40,7 @@ describe("<App/> integration", () => {
     expect(AppWrapper.find(CitySearch).props().locations).toEqual(
       AppLocationsState
     );
+    AppWrapper.unmount();
   });
   test("get list of events matching the city selected by the user", async () => {
     const AppWrapper = mount(<App />);
@@ -64,6 +65,48 @@ describe("<App/> integration", () => {
     await suggestionsItems.at(suggestionsItems.length - 1).simulate("click");
     const allEvents = await getEvents();
     expect(AppWrapper.state("events")).toEqual(allEvents);
+    AppWrapper.unmount();
+  });
+  test("<app/> passes event number state as props to <NumberOfEvents/>", () => {
+    const AppWrapper = mount(<App />);
+    const AppNumberState = AppWrapper.state("eventNumber");
+    expect(AppNumberState).not.toEqual(undefined);
+    expect(AppWrapper.find(NumberOfEvents).props().eventNumber).toEqual(
+      AppNumberState
+    );
+    AppWrapper.unmount();
+  });
+  test("Set number of events by user", async () => {
+    const AppWrapper = mount(<App />);
+    const NumberOfEventsWrapper = AppWrapper.find(NumberOfEvents);
+    const number = NumberOfEventsWrapper.find(".events-number__input").prop(
+      "value"
+    );
+    await NumberOfEventsWrapper.instance().handleChange;
+    expect(AppWrapper.state("eventNumber")).toEqual(number);
+    AppWrapper.unmount();
+  });
+  test("alert when user input below 1 event", async () => {
+    global.alert = jest.fn();
+    const AppWrapper = mount(<App />);
+    const NumberOfEventsWrapper = AppWrapper.find(NumberOfEvents);
+
+    await NumberOfEventsWrapper.find(".events-number__input").simulate(
+      "change",
+      {
+        target: { value: 0 },
+      }
+    );
+    expect(global.alert).toHaveBeenCalledWith("please enter a number above 1");
+  });
+  test("mock data in the state `events` of <App/> is the same as the data in <EventList/>", async () => {
+    const AppWrapper = mount(<App />);
+    const NumberOfEventsWrapper = AppWrapper.find(NumberOfEvents);
+    NumberOfEventsWrapper.find(".events-number__input").simulate("change", {
+      target: { value: 1 },
+    });
+    await getEvents();
+    expect(AppWrapper.state("events")).toEqual(mockData.slice(0, 1));
     AppWrapper.unmount();
   });
 });

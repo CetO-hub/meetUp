@@ -6,7 +6,14 @@ export default class NumberOfEvents extends Component {
   };
 
   handleChange = (e) => {
-    this.setState({ number: e.target.value });
+    const eventCount = e.target.value;
+    if (eventCount < 1) {
+      alert("please enter a number above 1");
+      return;
+    } else {
+      this.setState({ number: eventCount });
+      this.props.updateEvents(null, eventCount);
+    }
   };
 
   render() {
@@ -16,7 +23,7 @@ export default class NumberOfEvents extends Component {
         <input
           className="events-number__input"
           value={this.state.number}
-          onChange={(e) => this.handleChange(e)}
+          onChange={this.handleChange}
         />
       </div>
     );
