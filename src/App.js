@@ -45,12 +45,16 @@ class App extends Component {
 
   componentDidMount() {
     this.mounted = true;
-    getEvents().then((events) => {
-      if (this.mounted) {
-        events = events.slice(0, this.state.eventNumber);
-        this.setState({ events, locations: extractLocations(events) });
-      }
-    });
+    getEvents()
+      .then((events) => {
+        if (this.mounted) {
+          events = events.slice(0, this.state.eventNumber);
+          this.setState({ events, locations: extractLocations(events) });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   componentWillUnmount() {
