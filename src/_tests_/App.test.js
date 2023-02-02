@@ -87,7 +87,6 @@ describe("<App/> integration", () => {
     AppWrapper.unmount();
   });
   test("alert when user input below 1 event", async () => {
-    global.alert = jest.fn();
     const AppWrapper = mount(<App />);
     const NumberOfEventsWrapper = AppWrapper.find(NumberOfEvents);
 
@@ -97,7 +96,9 @@ describe("<App/> integration", () => {
         target: { value: 0 },
       }
     );
-    expect(global.alert).toHaveBeenCalledWith("please enter a number above 1");
+    expect(NumberOfEventsWrapper.state("errorText")).toBe(
+      "Please enter a number between 1 and 32"
+    );
   });
   test("mock data in the state `events` of <App/> is the same as the data in <EventList/>", async () => {
     const AppWrapper = mount(<App />);
