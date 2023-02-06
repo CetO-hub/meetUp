@@ -42,9 +42,26 @@ export const getEvents = async () => {
     NProgress.done();
     return data ? JSON.parse(data).events : [];
   }
-  const token = await getAccessToken();
+
+  const token = localStorage.getItem("access_token");
 
   if (token) {
+    removeQuery();
+    const url =
+      "https://j08d3u8azh.execute-api.eu-central-1.amazonaws.com/dev/api/get-events" +
+      "/" +
+      token;
+    const result = await axios.get(url);
+    console.log(result);
+    if (result.data) {
+      var locations = extractLocations(result.data.events);
+      localStorage.setItem("lastEvents", JSON.stringify(result.data));
+      localStorage.setItem("locations", JSON.stringify(locations));
+    }
+    NProgress.done();
+    return result.data.events;
+  } else {
+    const token = await getAccessToken();
     removeQuery();
     const url =
       "https://j08d3u8azh.execute-api.eu-central-1.amazonaws.com/dev/api/get-events" +
