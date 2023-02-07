@@ -38,8 +38,6 @@ class App extends Component {
         this.setState({
           events: eventsDisplay,
           userLocation: location,
-        }).catch((err) => {
-          console.error("error occured: ", err.message);
         });
       });
     } else {
@@ -53,8 +51,6 @@ class App extends Component {
         this.setState({
           events: eventsDisplay,
           eventNumber: eventCount,
-        }).catch((err) => {
-          console.error("error occured: ", err.message);
         });
       });
     }

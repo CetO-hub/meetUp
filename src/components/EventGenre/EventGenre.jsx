@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
 const EventGenre = ({ events }) => {
   const [data, setData] = useState([]);
@@ -20,20 +20,22 @@ const EventGenre = ({ events }) => {
     //eslint-disable-next-line
   }, [events]);
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#522F60"];
 
   return (
     <ResponsiveContainer height={400}>
-      <PieChart width={400} height={400}>
+      <PieChart>
+        <Legend verticalAlign="top" height={36} />
         <Pie
           data={data}
-          cx={200}
-          cy={200}
+          cx="50%"
+          cy="50%"
           labelLine={false}
           label={({ name, percent }) =>
             `${name} ${(percent * 100).toFixed(0)}%`
           }
-          outerRadius={80}
+          innerRadius={80}
+          outerRadius={100}
           fill="#8884d8"
           dataKey="value"
         >
